@@ -33,6 +33,10 @@ const color yellowHoverFill(0.8f, 0.8f, 0);      // Darker Yellow
 const color grayHoverFill(0.5f, 0.5f, 0.5f);   // Darker Gray
 const color purpleHoverFill(0.5f, 0, 0.5f);    // Darker Purple
 
+// --- GAME ---
+// game start count down
+float gameCountDown;
+int startTime = 4;
 // --- Level ---
 // Level count and Level timer
 float countDownStarts;
@@ -44,6 +48,7 @@ int life = 3;
 color playerColor = WHITE;
 float timeSurvived;
 bool playerGodMode = false;
+bool startGame = false;
 // --- Easter Egg ---
 // Easter egg status
 bool EE1 = false;
@@ -325,38 +330,45 @@ void Engine::processInput() {
         if((redButtonOverlapsMouse && mousePressedLastFrame == GLFW_PRESS && mousePressed != GLFW_PRESS) || keys[GLFW_KEY_R]) { // RED
             player->setColor(RED);
             playerColor = RED;
-            screen = play;
+            startGame = true;
+            gameCountDown = glfwGetTime();
         }
         if((whiteButtonOverlapsMouse && mousePressedLastFrame == GLFW_PRESS && mousePressed != GLFW_PRESS) || keys[GLFW_KEY_W]) { // WHITE
             player->setColor(WHITE);
             playerColor = WHITE;
-            screen = play;
+            startGame = true;
+            gameCountDown = glfwGetTime();
         }
         if((blueButtonOverlapsMouse && mousePressedLastFrame == GLFW_PRESS && mousePressed != GLFW_PRESS) || keys[GLFW_KEY_B]) { // BLUE
             player->setColor(BLUE);
             playerColor = BLUE;
-            screen = play;
+            startGame = true;
+            gameCountDown = glfwGetTime();
         }
         if((yellowButtonOverlapsMouse && mousePressedLastFrame == GLFW_PRESS && mousePressed != GLFW_PRESS) || keys[GLFW_KEY_Y]) { // YELLOW
             player->setColor(YELLOW);
             playerColor = YELLOW;
-            screen = play;
+            startGame = true;
+            gameCountDown = glfwGetTime();
         }
         if((grayButtonOverlapsMouse && mousePressedLastFrame == GLFW_PRESS && mousePressed != GLFW_PRESS) || keys[GLFW_KEY_G]) { // GRAY
             player->setColor(GRAY);
             playerColor = GRAY;
-            screen = play;
+            startGame = true;
+            gameCountDown = glfwGetTime();
         }
         if((purpleButtonOverlapsMouse && mousePressedLastFrame == GLFW_PRESS && mousePressed != GLFW_PRESS) || keys[GLFW_KEY_P]) { // PURPLE
             player->setColor(PURPLE);
             playerColor = PURPLE;
-            screen = play;
+            startGame = true;
+            gameCountDown = glfwGetTime();
         }
         // -- EASTER EGG 1 --
         //Player color is set to rainbow
         if(keys[GLFW_KEY_E]) {
             EE1 = true;
-            screen = play;
+            startGame = true;
+            gameCountDown = glfwGetTime();
         }
 
         //Save mousePressed for next frame
@@ -643,6 +655,24 @@ void Engine::render() {
 
             string purple = "P";
             this->fontRenderer->renderText(purple, WIDTH/2 + 130 - (12 * purple.length()), HEIGHT/3.05, projection, 1, vec3{0, 0, 0});
+
+            // Game Start Countdown (after color selection give a 3second countdown before starting the game so the player can get prepared)
+            float timePassed;
+            if (startGame) {
+                // Countdown timer
+                timePassed = glfwGetTime() - gameCountDown;
+                //Display the countdown timer (Top right corner of the screen)
+                float timeRemaining = startTime - (glfwGetTime() - gameCountDown);
+
+                if (timeRemaining < 0) {
+                    timeRemaining = 0;
+                    screen = play;
+                }
+                string gameStart = "GAME STARTS IN: ";
+                this->fontRenderer->renderText(gameStart, WIDTH/2.2 - (12 * gameStart.length()), HEIGHT/1.8, projection, 1, vec3{1, 1, 1});
+                string timer = std::to_string(static_cast<int>(timeRemaining)) + "s";
+                this->fontRenderer->renderText(timer, WIDTH/1.6 - (12 * timer.length()), HEIGHT/1.8, projection, 1, vec3{1, 1, 1});
+            }
             break;
         }
         // Game screen
