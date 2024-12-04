@@ -406,21 +406,18 @@ void Engine::processInput() {
     }
 
     // User starts game with "S" (only if user has not lost the game)
-    if(screen != over && screen != selection && screen != start) {
+    if(screen != over && screen != selection && screen != start && screen != lost) {
         if(keys[GLFW_KEY_S]) {
-            //User starts game
-            screen = play;
-            //Starting the countdown timer for the level
-            countDownStarts = glfwGetTime();
+            //User starts level
+            gameCountDown = glfwGetTime();
+            startGame = true;
+            //screen = play;
         }
     }
 
     // When player loses level and tries again check if they have 3 lives left
     if (screen == lost) {
         if(keys[GLFW_KEY_S] && life != 0) {
-            //Making sure player stays at same level
-            lvl--;
-            //Transition to level
             screen = play;
             //Starting the countdown timer for the level
             countDownStarts = glfwGetTime();
@@ -537,6 +534,8 @@ void Engine::update() {
             }
             else {
                 bubbles.clear();
+                startGame = false;
+                startTime = 4;
                 screen = lvlUP;
                 initShapes();
                 countDownTime = 20;
@@ -684,9 +683,9 @@ void Engine::render() {
                     screen = play;
                 }
                 string gameStart = "GAME STARTS IN: ";
-                this->fontRenderer->renderText(gameStart, WIDTH/2.2 - (12 * gameStart.length()), HEIGHT/1.8, projection, 1, vec3{1, 1, 1});
+                this->fontRenderer->renderText(gameStart, WIDTH/2.13 - (12 * gameStart.length()), HEIGHT/1.8, projection, 1, vec3{1, 1, 1});
                 string timer = std::to_string(static_cast<int>(timeRemaining)) + "s";
-                this->fontRenderer->renderText(timer, WIDTH/1.6 - (12 * timer.length()), HEIGHT/1.8, projection, 1, vec3{1, 1, 1});
+                this->fontRenderer->renderText(timer, WIDTH/1.53 - (12 * timer.length()), HEIGHT/1.8, projection, 1, vec3{1, 1, 1});
             }
             break;
         }
@@ -783,6 +782,26 @@ void Engine::render() {
             playerShader.use();
             player->setUniforms();
             player->draw();
+
+            // Game Start Countdown (after color selection give a 3second countdown before starting the game so the player can get prepared)
+            float timePassed;
+            if (startGame) {
+                // Countdown timer
+                timePassed = glfwGetTime() - gameCountDown;
+                //Display the countdown timer (Top right corner of the screen)
+                float timeRemaining = startTime - (glfwGetTime() - gameCountDown);
+
+                if (timeRemaining < 0) {
+                    timeRemaining = 0;
+                    //Starting the countdown timer for the level
+                    countDownStarts = glfwGetTime();
+                    screen = play;
+                }
+                string gameStart = "NEXT LVL STARTS IN: ";
+                this->fontRenderer->renderText(gameStart, WIDTH/2.13 - (12 * gameStart.length()), HEIGHT/1.8, projection, 1, vec3{1, 1, 1});
+                string timer = std::to_string(static_cast<int>(timeRemaining)) + "s";
+                this->fontRenderer->renderText(timer, WIDTH/1.53 - (12 * timer.length()), HEIGHT/1.8, projection, 1, vec3{1, 1, 1});
+            }
 
             break;
         }
