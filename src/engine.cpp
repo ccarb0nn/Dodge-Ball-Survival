@@ -800,7 +800,7 @@ void Engine::render() {
                 string gameStart = "NEXT LVL STARTS IN: ";
                 this->fontRenderer->renderText(gameStart, WIDTH/2.13 - (12 * gameStart.length()), HEIGHT/1.8, projection, 1, vec3{1, 1, 1});
                 string timer = std::to_string(static_cast<int>(timeRemaining)) + "s";
-                this->fontRenderer->renderText(timer, WIDTH/1.53 - (12 * timer.length()), HEIGHT/1.8, projection, 1, vec3{1, 1, 1});
+                this->fontRenderer->renderText(timer, WIDTH/1.5 - (12 * timer.length()), HEIGHT/1.8, projection, 1, vec3{1, 1, 1});
             }
 
             break;
