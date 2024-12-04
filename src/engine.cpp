@@ -42,7 +42,7 @@ bool selected = false;
 // Level count and Level timer
 float countDownStarts;
 int countDownTime = 20;
-int lvl = 5;
+int lvl = 1;
 // --- Player ---
 // Players life count, default color, time survived, and godMode status
 int life = 3;
