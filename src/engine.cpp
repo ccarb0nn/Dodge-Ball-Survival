@@ -37,11 +37,12 @@ const color purpleHoverFill(0.5f, 0, 0.5f);    // Darker Purple
 // game start count down
 float gameCountDown;
 int startTime = 4;
+bool selected = false;
 // --- Level ---
 // Level count and Level timer
 float countDownStarts;
 int countDownTime = 20;
-int lvl = 1;
+int lvl = 5;
 // --- Player ---
 // Players life count, default color, time survived, and godMode status
 int life = 3;
@@ -159,7 +160,7 @@ void Engine::initShapes() {
     vec4 color;
 
     // Update Bubble stats based on level
-    // (LVL 1) Small bubbles, slow speed, few spawn in
+    // (LVL 1) Small bubbles, slow speed, fewewr spawn in
     if(lvl == 1) {
         numberOfBubbles = 75;
         minRadius = 5;
@@ -282,84 +283,98 @@ void Engine::processInput() {
 
     // When player selects character, start game after they clicked the color they want to use (When at selection screen)
     if(screen == selection) {
-        // --- Button / Mouse Interaction (Mouse hovers over button / No click) ---
-        if(redButtonOverlapsMouse) {               // RED
-            redPlayer->setColor(redHoverFill);
-            playerLocation->setColor(RED);
-        }
-        else {
-            redPlayer->setColor(RED);
-        }
-        if(whiteButtonOverlapsMouse) {            // WHITE
-            whitePlayer->setColor(whiteHoverFill);
-            playerLocation->setColor(WHITE);
-        }
-        else {
-            whitePlayer->setColor(WHITE);
-        }
-        if(blueButtonOverlapsMouse) {            // BLUE
-            bluePlayer->setColor(blueHoverFill);
-            playerLocation->setColor(BLUE);
-        }
-        else {
-            bluePlayer->setColor(BLUE);
-        }
-        if(yellowButtonOverlapsMouse) {         // YELLOW
-            yellowPlayer->setColor(yellowHoverFill);
-            playerLocation->setColor(YELLOW);
-        }
-        else {
-            yellowPlayer->setColor(YELLOW);
-        }
-        if(grayButtonOverlapsMouse) {           // GRAY
-            grayPlayer->setColor(grayHoverFill);
-            playerLocation->setColor(GRAY);
-        }
-        else {
-            grayPlayer->setColor(GRAY);
-        }
-        if(purpleButtonOverlapsMouse) {        // PURPLE
-            purplePlayer->setColor(purpleHoverFill);
-            playerLocation->setColor(PURPLE);
-        }
-        else {
-            purplePlayer->setColor(PURPLE);
+        if (!selected) {
+            // --- Button / Mouse Interaction (Mouse hovers over button / No click) ---
+            if(redButtonOverlapsMouse) {               // RED
+                redPlayer->setColor(redHoverFill);
+                playerLocation->setColor(RED);
+            }
+            else {
+                redPlayer->setColor(RED);
+            }
+            if(whiteButtonOverlapsMouse) {            // WHITE
+                whitePlayer->setColor(whiteHoverFill);
+                playerLocation->setColor(WHITE);
+            }
+            else {
+                whitePlayer->setColor(WHITE);
+            }
+            if(blueButtonOverlapsMouse) {            // BLUE
+                bluePlayer->setColor(blueHoverFill);
+                playerLocation->setColor(BLUE);
+            }
+            else {
+                bluePlayer->setColor(BLUE);
+            }
+            if(yellowButtonOverlapsMouse) {         // YELLOW
+                yellowPlayer->setColor(yellowHoverFill);
+                playerLocation->setColor(YELLOW);
+            }
+            else {
+                yellowPlayer->setColor(YELLOW);
+            }
+            if(grayButtonOverlapsMouse) {           // GRAY
+                grayPlayer->setColor(grayHoverFill);
+                playerLocation->setColor(GRAY);
+            }
+            else {
+                grayPlayer->setColor(GRAY);
+            }
+            if(purpleButtonOverlapsMouse) {        // PURPLE
+                purplePlayer->setColor(purpleHoverFill);
+                playerLocation->setColor(PURPLE);
+            }
+            else {
+                purplePlayer->setColor(PURPLE);
+            }
         }
 
         // --- Button / Mouse interaction (Mouse Click) ---
         if((redButtonOverlapsMouse && mousePressedLastFrame == GLFW_PRESS && mousePressed != GLFW_PRESS) || keys[GLFW_KEY_R]) { // RED
             player->setColor(RED);
+            playerLocation->setColor(RED);
             playerColor = RED;
+            selected = true;
             startGame = true;
             gameCountDown = glfwGetTime();
         }
         if((whiteButtonOverlapsMouse && mousePressedLastFrame == GLFW_PRESS && mousePressed != GLFW_PRESS) || keys[GLFW_KEY_W]) { // WHITE
             player->setColor(WHITE);
+            playerLocation->setColor(WHITE);
             playerColor = WHITE;
+            selected = true;
             startGame = true;
             gameCountDown = glfwGetTime();
         }
         if((blueButtonOverlapsMouse && mousePressedLastFrame == GLFW_PRESS && mousePressed != GLFW_PRESS) || keys[GLFW_KEY_B]) { // BLUE
             player->setColor(BLUE);
+            playerLocation->setColor(BLUE);
             playerColor = BLUE;
+            selected = true;
             startGame = true;
             gameCountDown = glfwGetTime();
         }
         if((yellowButtonOverlapsMouse && mousePressedLastFrame == GLFW_PRESS && mousePressed != GLFW_PRESS) || keys[GLFW_KEY_Y]) { // YELLOW
             player->setColor(YELLOW);
+            playerLocation->setColor(YELLOW);
             playerColor = YELLOW;
+            selected = true;
             startGame = true;
             gameCountDown = glfwGetTime();
         }
         if((grayButtonOverlapsMouse && mousePressedLastFrame == GLFW_PRESS && mousePressed != GLFW_PRESS) || keys[GLFW_KEY_G]) { // GRAY
             player->setColor(GRAY);
+            playerLocation->setColor(GRAY);
             playerColor = GRAY;
+            selected = true;
             startGame = true;
             gameCountDown = glfwGetTime();
         }
         if((purpleButtonOverlapsMouse && mousePressedLastFrame == GLFW_PRESS && mousePressed != GLFW_PRESS) || keys[GLFW_KEY_P]) { // PURPLE
             player->setColor(PURPLE);
+            playerLocation->setColor(PURPLE);
             playerColor = PURPLE;
+            selected = true;
             startGame = true;
             gameCountDown = glfwGetTime();
         }
@@ -412,7 +427,7 @@ void Engine::processInput() {
         }
         else if(life == 0){
             // Get the losing pixel art from the scene.txt file
-            readFromFile(R"(C:\Users\crcar\CLionProjects\M4OEP-ccarbonn\res\art\scene.txt)");
+            readFromFile(R"(C:\Users\crcar\CLionProjects\Dodge-Ball-Survival\res\art\scene.txt)");
             // Change to Game Over Screen
             screen = over;
         }
@@ -517,7 +532,7 @@ void Engine::update() {
             lvl++;
             if(lvl > 5) {
                 // Get the winning pixel art from the scene2.txt file
-                readFromFile(R"(C:\Users\crcar\CLionProjects\M4OEP-ccarbonn\res\art\scene2.txt)");
+                readFromFile(R"(C:\Users\crcar\CLionProjects\Dodge-Ball-Survival\res\art\scene2.txt)");
                 screen = win;
             }
             else {
