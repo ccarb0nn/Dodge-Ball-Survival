@@ -48,6 +48,9 @@ bool playerGodMode = false;
 // Easter egg status
 bool EE1 = false;
 
+// Player Placeholder For Player Location Viewing
+color samplePLayerColor = WHITE;
+
 // Second way of generating my random values -> dist(rd)
 std::random_device rd;
 std::uniform_int_distribution<> dist(0, 10000);
@@ -125,20 +128,23 @@ void Engine::initShapes() {
     player = make_unique<Rect>(playerShader, vec2{WIDTH/2,HEIGHT/2}, 20, playerColor);
     // --- Player color options (buttons) ---
     //White
-    whitePlayer = make_unique<Rect>(playerShader, vec2{WIDTH/2,HEIGHT/2}, vec2{100, 50}, WHITE);
+    whitePlayer = make_unique<Rect>(playerShader, vec2{WIDTH/2,HEIGHT/2.4}, vec2{100, 80}, WHITE);
     //Red
-    redPlayer = make_unique<Rect>(playerShader, vec2{WIDTH/3,HEIGHT/2}, vec2{100, 50}, RED);
+    redPlayer = make_unique<Rect>(playerShader, vec2{WIDTH/2.4,HEIGHT/2.4}, vec2{100, 80}, RED);
     //Blue
-    bluePlayer = make_unique<Rect>(playerShader, vec2{WIDTH/2 + 130,HEIGHT/2}, vec2{100, 50}, BLUE);
+    bluePlayer = make_unique<Rect>(playerShader, vec2{WIDTH/2 + 130,HEIGHT/2.4}, vec2{100, 80}, BLUE);
     //Yellow
-    yellowPlayer = make_unique<Rect>(playerShader, vec2{WIDTH/3,HEIGHT/3}, vec2{100, 50}, YELLOW);
+    yellowPlayer = make_unique<Rect>(playerShader, vec2{WIDTH/2.4,HEIGHT/3}, vec2{100, 80}, YELLOW);
     //Gray
-    grayPlayer = make_unique<Rect>(playerShader, vec2{WIDTH/2,HEIGHT/3}, vec2{100, 50}, GRAY);
+    grayPlayer = make_unique<Rect>(playerShader, vec2{WIDTH/2,HEIGHT/3}, vec2{100, 80}, GRAY);
     //Purple
-    purplePlayer = make_unique<Rect>(playerShader, vec2{WIDTH/2 + 130,HEIGHT/3}, vec2{100, 50}, PURPLE);
+    purplePlayer = make_unique<Rect>(playerShader, vec2{WIDTH/2 + 130,HEIGHT/3}, vec2{100, 80}, PURPLE);
 
+    // --- Other ---
     //God Mode
-    godMode = make_unique<Rect>(playerShader, vec2{WIDTH/10, HEIGHT/20.1}, vec2{100, 50}, WHITE);
+    godMode = make_unique<Rect>(playerShader, vec2{WIDTH/10, HEIGHT/20.1}, vec2{100, 80}, WHITE);
+    // Player Location Placeholder For Viewing
+    playerLocation = make_unique<Rect>(playerShader, vec2{WIDTH/2,HEIGHT/2}, 20, samplePLayerColor);
 
     // Bubble Stats
     int numberOfBubbles;
@@ -274,36 +280,42 @@ void Engine::processInput() {
         // --- Button / Mouse Interaction (Mouse hovers over button / No click) ---
         if(redButtonOverlapsMouse) {               // RED
             redPlayer->setColor(redHoverFill);
+            playerLocation->setColor(RED);
         }
         else {
             redPlayer->setColor(RED);
         }
         if(whiteButtonOverlapsMouse) {            // WHITE
             whitePlayer->setColor(whiteHoverFill);
+            playerLocation->setColor(WHITE);
         }
         else {
             whitePlayer->setColor(WHITE);
         }
         if(blueButtonOverlapsMouse) {            // BLUE
             bluePlayer->setColor(blueHoverFill);
+            playerLocation->setColor(BLUE);
         }
         else {
             bluePlayer->setColor(BLUE);
         }
         if(yellowButtonOverlapsMouse) {         // YELLOW
             yellowPlayer->setColor(yellowHoverFill);
+            playerLocation->setColor(YELLOW);
         }
         else {
             yellowPlayer->setColor(YELLOW);
         }
         if(grayButtonOverlapsMouse) {           // GRAY
             grayPlayer->setColor(grayHoverFill);
+            playerLocation->setColor(GRAY);
         }
         else {
             grayPlayer->setColor(GRAY);
         }
         if(purpleButtonOverlapsMouse) {        // PURPLE
             purplePlayer->setColor(purpleHoverFill);
+            playerLocation->setColor(PURPLE);
         }
         else {
             purplePlayer->setColor(PURPLE);
@@ -561,27 +573,32 @@ void Engine::render() {
     switch(screen) {
         // Welcome Screen
         case start: {
-            //Displaying the goal of the game & how to start
-            string description = "Avoid the balls & survive 20s";
-            string d2 = "to reach the next level";
-            string d3 = "Beat level 5 to win";
-            string d4 = "[Use arrow keys to move]";
-            string d5 = "[Use Space as a boost]";
+            //Displaying the goal of the game / controls / how to start
+            string title = "* DODGE BALL SURVIVAL *";
+            string breaker = "************************";
+            string description = "Avoid the balls & survive 20 seconds to reach the next level";
+            string d2 = "Beat level 5 to win the game!";
+
+            string d4 = "[Use Arrow Keys To Move]";
+            string d5 = "[Use Space Bar As A Boost]";
             string d6 = "[You Have 3 Lives]";
-            string message = "PRESS C TO CONTINUE";
-            this->fontRenderer->renderText(description, WIDTH/2 - (12 * description.length()), HEIGHT/1.25, projection, 1, vec3{1, 1, 1});
+
+            string message = "- ENTER C TO CONTINUE -";
+            this->fontRenderer->renderText(breaker, WIDTH/2 - (12 * breaker.length()), HEIGHT/1.1, projection, 1, vec3{1, 1, 1});
+            this->fontRenderer->renderText(title, WIDTH/2 - (12 * title.length()), HEIGHT/1.15, projection, 1, vec3{1, 1, 1});
+            this->fontRenderer->renderText(breaker, WIDTH/2 - (12 * breaker.length()), HEIGHT/1.2, projection, 1, vec3{1, 1, 1});
+            this->fontRenderer->renderText(description, WIDTH/2 - (12 * description.length()), HEIGHT/1.3, projection, 1, vec3{1, 1, 1});
             this->fontRenderer->renderText(d2, WIDTH/2 - (12 * d2.length()), HEIGHT/1.4, projection, 1, vec3{1, 1, 1});
-            this->fontRenderer->renderText(d3, WIDTH/2 - (12 * d3.length()), HEIGHT/1.6, projection, 1, vec3{1, 1, 1});
-            this->fontRenderer->renderText(d4, WIDTH/2 - (12 * d4.length()), HEIGHT/2.0, projection, 1, vec3{1, 1, 0});
-            this->fontRenderer->renderText(d5, WIDTH/2 - (12 * d5.length()), HEIGHT/2.4, projection, 1, vec3{1, 1, 0});
-            this->fontRenderer->renderText(d6, WIDTH/2 - (12 * d6.length()), HEIGHT/3.0, projection, 1, vec3{1, 0, 1});
-            this->fontRenderer->renderText(message, WIDTH/2 - (12 * message.length()), HEIGHT/5, projection, 1, vec3{1, 1, 1});
+            this->fontRenderer->renderText(d4, WIDTH/2 - (12 * d4.length()), HEIGHT/1.8, projection, 1, vec3{1, 1, 0});
+            this->fontRenderer->renderText(d5, WIDTH/2 - (12 * d5.length()), HEIGHT/2.15, projection, 1, vec3{1, 1, 0});
+            this->fontRenderer->renderText(d6, WIDTH/2 - (12 * d6.length()), HEIGHT/2.8, projection, 1, vec3{1, 1, 0});
+            this->fontRenderer->renderText(message, WIDTH/2 - (12 * message.length()), HEIGHT/5.8, projection, 1, vec3{1, 1, 1});
             break;
         }
         // User gets to pick the color of their player (click on the colored box)
         case selection: {
             string description = "PICK YOUR PLAYER COLOR TO START";
-            this->fontRenderer->renderText(description, WIDTH/2 - (12 * description.length()), HEIGHT/1.25, projection, 1, vec3{1, 1, 1});
+            this->fontRenderer->renderText(description, WIDTH/2 - (12 * description.length()), HEIGHT/1.5, projection, 1, vec3{1, 1, 1});
 
             // --- Player Color Selection Buttons ---
             playerShader.use();
@@ -604,24 +621,28 @@ void Engine::render() {
             purplePlayer->setUniforms();
             purplePlayer->draw();
 
+            // Sample Player Model
+            playerLocation->setUniforms();
+            playerLocation->draw();
+
             // Player Color Selection Button Text
             string white = "W";
-            this->fontRenderer->renderText(white, WIDTH/2 - (12 * white.length()), HEIGHT/2.06, projection, 1, vec3{0, 0, 0});
+            this->fontRenderer->renderText(white, WIDTH/2 - (12 * white.length()), HEIGHT/2.45, projection, 1, vec3{0, 0, 0});
 
             string red = "R";
-            this->fontRenderer->renderText(red, WIDTH/3 - (12 * red.length()), HEIGHT/2.06, projection, 1, vec3{0, 0, 0});
+            this->fontRenderer->renderText(red, WIDTH/2.4 - (12 * red.length()), HEIGHT/2.45, projection, 1, vec3{0, 0, 0});
 
             string blue = "B";
-            this->fontRenderer->renderText(blue, WIDTH/2 + 130 - (12 * blue.length()), HEIGHT/2.06, projection, 1, vec3{0, 0, 0});
+            this->fontRenderer->renderText(blue, WIDTH/2 + 130 - (12 * blue.length()), HEIGHT/2.45, projection, 1, vec3{0, 0, 0});
 
             string yellow = "Y";
-            this->fontRenderer->renderText(yellow, WIDTH/3 - (12 * yellow.length()), HEIGHT/3.2, projection, 1, vec3{0, 0, 0});
+            this->fontRenderer->renderText(yellow, WIDTH/2.4 - (12 * yellow.length()), HEIGHT/3.05, projection, 1, vec3{0, 0, 0});
 
             string gray = "G";
-            this->fontRenderer->renderText(gray, WIDTH/2 - (12 * gray.length()), HEIGHT/3.2, projection, 1, vec3{0, 0, 0});
+            this->fontRenderer->renderText(gray, WIDTH/2 - (12 * gray.length()), HEIGHT/3.05, projection, 1, vec3{0, 0, 0});
 
             string purple = "P";
-            this->fontRenderer->renderText(purple, WIDTH/2 + 130 - (12 * purple.length()), HEIGHT/3.2, projection, 1, vec3{0, 0, 0});
+            this->fontRenderer->renderText(purple, WIDTH/2 + 130 - (12 * purple.length()), HEIGHT/3.05, projection, 1, vec3{0, 0, 0});
             break;
         }
         // Game screen
@@ -712,6 +733,12 @@ void Engine::render() {
             this->fontRenderer->renderText(message, WIDTH/2 - (12 * message.length()), HEIGHT/3, projection, 1, vec3{1, 1, 1});
             this->fontRenderer->renderText(message2, WIDTH/2 - (12 * message2.length()), HEIGHT/4, projection, 1, vec3{1, 1, 1});
             this->fontRenderer->renderText(message3, WIDTH/2 - (12 * message3.length()), HEIGHT/6, projection, 1, vec3{1, 1, 1});
+
+            //Drawing Player So They Can See Where They Spawn In
+            playerShader.use();
+            player->setUniforms();
+            player->draw();
+
             break;
         }
         case lost:{

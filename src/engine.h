@@ -24,7 +24,7 @@ class Engine {
         GLFWwindow* window{};
 
         /// @brief The width and height of the window.
-        const unsigned int WIDTH = 800, HEIGHT = 600; // Window dimensions (change to 1600 & 1200)
+        const unsigned int WIDTH = 1600, HEIGHT = 1200;
         const glm::mat4 projection = glm::ortho(0.0f, (float)WIDTH, 0.0f, (float)HEIGHT);
 
         bool keys[1024];
@@ -62,6 +62,9 @@ class Engine {
 
         //God Mode (used to easily complete levels and check changes made, click lives left to engage)
         unique_ptr<Shape> godMode;
+
+        //Players Location Placeholder
+        unique_ptr<Shape> playerLocation;
 
         // Shaders
         Shader shapeShader;
